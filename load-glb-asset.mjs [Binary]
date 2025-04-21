@@ -1,0 +1,60 @@
+import { Script } from 'playcanvas';
+import { loadGlbContainerFromAsset } from './glb-utils.mjs'
+
+/**
+ * LoadGlbAsset - Loads a GLB asset and instantiates it under the current entity.
+ */
+export class LoadGlbAsset extends Script {
+    /**
+     * Binary GLB asset to load and instantiate.
+     * 
+     * @attribute
+     * @type {pc.Asset}
+     * @resource binary
+     * @title GLB Asset
+     */
+    glbAsset;
+
+    async initialize() {
+
+        this.helmet = null;
+        // Load GLB container using the utility function
+        try {
+             console.log('LOAD HELMET FIRST');
+            const asset = await loadGlbContainerFromAsset(this.glbAsset, null, this.glbAsset.name, this.app)
+            const renderRootEntity = asset.resource.instantiateRenderEntity();
+            this.entity.addChild(renderRootEntity);
+            this.helmet = asset;
+              setTimeout(() => {
+                 console.log('UnLOAD HELMET 1');
+                this.helmet.unload();
+            }, 3000);
+
+            setTimeout(() => {
+                this.loadGlb();
+            }, 10000);
+
+             setTimeout(() => {
+                console.log('UnLOAD HELMET 2');
+                this.helmet.unload();
+            }, 3000);
+        } catch (error) {
+            console.error(error);
+        };
+    }
+
+     async loadGlb() {
+        console.log('LOAD HELMET ');
+        try {
+            const asset = await loadGlbContainerFromAsset(this.glbAsset, null, this.glbAsset.name, this.app);
+            const renderRootEntity = asset.resource.instantiateRenderEntity();
+            this.entity.addChild(renderRootEntity);
+            this.helmet = asset;
+            console.log('GLB Loaded Again');
+        } catch (error) {
+            console.error("Error loading GLB:", error);
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////
